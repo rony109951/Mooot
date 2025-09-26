@@ -50,9 +50,9 @@
     <p class="shiny-text">لتطوير موقع مجاناً - 01212843252</p>
   </div>
 
-  <!-- اللوجو -->
-  <div class="w-full" style="height:1305px;">
-    <img src="moot.png" alt="logo" class="w-full h-full object-cover">
+  <!-- اللوجو (حجمه الطبيعي) -->
+  <div class="w-full">
+    <img src="moot.png" alt="logo" class="w-full h-auto object-contain">
   </div>
 
   <!-- النص -->
@@ -68,7 +68,7 @@
     <button id="backBtn" class="bg-yellow-500 text-black px-4 py-2 rounded mb-6 hover:bg-yellow-600 transition">🔙 رجوع للقائمة</button>
     <h2 id="surahName" class="text-3xl text-yellow-400 mb-4"></h2>
     <audio id="player" controls class="w-11/12 mx-auto mb-6"></audio>
-    <img id="surahImg" src="" class="mx-auto border-4 border-yellow-400 rounded-lg shadow-lg">
+    <div id="ayahs" class="text-lg leading-loose space-y-4"></div>
   </div>
 
   <!-- الفوتر -->
@@ -98,7 +98,7 @@
     const surahList = document.getElementById("surahList");
     const content = document.getElementById("content");
     const surahName = document.getElementById("surahName");
-    const surahImg = document.getElementById("surahImg");
+    const ayahsDiv = document.getElementById("ayahs");
     const player = document.getElementById("player");
     const backBtn = document.getElementById("backBtn");
 
@@ -109,8 +109,21 @@
       div.innerText = name;
       div.onclick = () => {
         surahName.innerText = name;
-        surahImg.src = `https://quran-images-api.vercel.app/surah/${index+1}.png`;
         player.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${index+1}.mp3`;
+        
+        // جلب الآيات من API
+        fetch(`https://api.alquran.cloud/v1/surah/${index+1}`)
+          .then(res => res.json())
+          .then(data => {
+            ayahsDiv.innerHTML = "";
+            data.data.ayahs.forEach(ayah => {
+              const span = document.createElement("span");
+              span.className = "block my-2";
+              span.innerText = ayah.text + " ﴿" + ayah.numberInSurah + "﴾";
+              ayahsDiv.appendChild(span);
+            });
+          });
+
         surahList.classList.add("hidden");
         content.classList.remove("hidden");
       };
@@ -125,5 +138,4 @@
     };
   </script>
 </body>
-      </html>
-      
+</html>
