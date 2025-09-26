@@ -25,7 +25,7 @@
     html { scroll-behavior: smooth; }
     header img {
       width: 100%;
-      max-width: 800px;
+      max-width: 600px;
       height: auto;
       margin: 0 auto;
       display: block;
@@ -120,7 +120,7 @@
           url = `https://server12.mp3quran.net/musshaf_mjwd_Abdurrahman_Mussad/${surahNumber}.mp3`;
         }
 
-        surahName.innerText = name;
+        surahName.innerText = "سورة " + name;
         player.src = url;
 
         // جلب النصوص من API
@@ -142,4 +142,5 @@
     }
   </script>
 </body>
-</html>
+  </html>
+  
