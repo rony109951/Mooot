@@ -8,24 +8,11 @@
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="موقع القرآن الكريم" />
-  <meta property="og:description" content="صدقة جارية - استمع وتدبر القرآن الكريم" />
-  <meta property="og:image" content="logo.png" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://yourusername.github.io/repo-name/" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="موقع القرآن الكريم" />
-  <meta name="twitter:description" content="صدقة جارية - استمع وتدبر القرآن الكريم" />
-  <meta name="twitter:image" content="logo.png" />
-
   <style>
     html { scroll-behavior: smooth; }
     header img {
       width: 100%;
-      max-width: 600px;
+      max-width: 500px;
       height: auto;
       margin: 0 auto;
       display: block;
@@ -48,17 +35,8 @@
 
   <!-- العنوان -->
   <h2 class="text-center text-yellow-400 text-2xl my-6">
-    صدقة جارية على حرم رمضان عبدالهادي - محمد رمضان الصعيدي "وكل متوفي"
+    صدقة جارية على روح المتوفين
   </h2>
-
-  <!-- اختيار الشيخ -->
-  <div class="text-center my-4">
-    <label class="text-lg">اختر القارئ: </label>
-    <select id="reciter" class="bg-gray-800 text-white p-2 rounded">
-      <option value="afs">مشاري راشد</option>
-      <option value="musshaf_mjwd_Abdurrahman_Mussad">عبدالرحمن مسعد</option>
-    </select>
-  </div>
 
   <!-- قائمة السور -->
   <div id="surahList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-6"></div>
@@ -66,15 +44,22 @@
   <!-- محتوى السورة -->
   <div id="content" class="hidden text-center p-6">
     <h2 id="surahName" class="text-3xl text-yellow-400 mb-4"></h2>
+
+    <!-- الأزرار لاختيار القارئ -->
+    <div class="flex justify-center gap-4 mb-4">
+      <button onclick="playReciter( afs )" class="bg-yellow-400 text-black px-4 py-2 rounded-lg">🎧 مشاري راشد</button>
+      <button onclick="playReciter( musshaf_mjwd_Abdurrahman_Mussad )" class="bg-yellow-400 text-black px-4 py-2 rounded-lg">🎧 عبدالرحمن مسعد</button>
+    </div>
+
     <audio id="player" controls class="w-11/12 mx-auto mb-6"></audio>
-    <div id="surahText" class="bg-gray-900 p-4 rounded-lg shadow-lg"></div>
+    <div id="surahText" class="bg-gray-900 p-4 rounded-lg shadow-lg text-right"></div>
+
     <button onclick="goBack()" class="bg-yellow-400 text-black px-6 py-2 mt-6 rounded-lg">⬅ رجوع</button>
   </div>
 
   <!-- الفوتر -->
   <footer class="text-center text-gray-400 py-6 mt-10 border-t border-gray-700">
-    <p>تم تطوير الموقع مجانا - للتواصل واتساب فقط: 01212843252</p>
-    <p>جميع الحقوق محفوظة © 2025</p>
+    <p>تم تطوير الموقع مجانا</p>
     <p class="text-yellow-400">المطور / محمد الصنقري</p>
   </footer>
 
@@ -102,7 +87,8 @@
     const surahName = document.getElementById("surahName");
     const surahText = document.getElementById("surahText");
     const player = document.getElementById("player");
-    const reciterSelect = document.getElementById("reciter");
+
+    let currentSurah = 1;
 
     // إنشاء أزرار السور
     surahs.forEach((name, index) => {
@@ -110,21 +96,11 @@
       div.className = "bg-gray-900 text-white text-xl py-4 rounded-lg cursor-pointer hover:bg-yellow-400 hover:text-black transition text-center";
       div.innerText = name;
       div.onclick = async () => {
-        const surahNumber = String(index + 1).padStart(3, "0");
-        const reciter = reciterSelect.value;
-        let url = "";
+        currentSurah = index + 1;
+        surahName.innerText = name;
 
-        if (reciter === "afs") {
-          url = `https://server8.mp3quran.net/afs/${surahNumber}.mp3`;
-        } else {
-          url = `https://server12.mp3quran.net/musshaf_mjwd_Abdurrahman_Mussad/${surahNumber}.mp3`;
-        }
-
-        surahName.innerText = "سورة " + name;
-        player.src = url;
-
-        // جلب النصوص من API
-        const res = await fetch(`https://api.quran.com/v4/quran/verses/uthmani?chapter_number=${index+1}`);
+        // جلب الآيات من API
+        const res = await fetch(`https://api.quran.com/v4/quran/verses/uthmani?chapter_number=${currentSurah}`);
         const data = await res.json();
         const verses = data.verses.map(v => v.text_uthmani).join(" ");
         surahText.innerText = verses;
@@ -134,6 +110,21 @@
       };
       surahList.appendChild(div);
     });
+
+    // تشغيل الشيخ حسب الاختيار
+    function playReciter(reciter) {
+      const surahNumber = String(currentSurah).padStart(3, "0");
+      let url = "";
+
+      if (reciter === "afs") {
+        url = `https://server8.mp3quran.net/afs/${surahNumber}.mp3`;
+      } else {
+        url = `https://server12.mp3quran.net/musshaf_mjwd_Abdurrahman_Mussad/${surahNumber}.mp3`;
+      }
+
+      player.src = url;
+      player.play();
+    }
 
     function goBack() {
       content.classList.add("hidden");
