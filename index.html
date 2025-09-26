@@ -3,170 +3,174 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>موقع قرآن كريم</title>
+  <title>القرآن الكريم</title>
 
-  <!-- Meta Tags -->
-  <meta property="og:title" content="موقع قرآن كريم - صدقة جارية">
-  <meta property="og:description" content="استمع واقرأ القرآن الكريم كامل">
+  <!-- أيقونة المشاركة (واتساب وغيره) -->
+  <meta property="og:title" content="موقع القرآن الكريم">
+  <meta property="og:description" content="تلاوة القرآن الكريم بصوت جميل">
   <meta property="og:image" content="logo.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://your-site.github.io/">
-
-  <link rel="icon" href="logo.png" type="image/png">
 
   <style>
     body {
-      background: #000;
-      color: #fff;
-      font-family: "Tahoma", sans-serif;
+      background: black;
+      color: white;
+      font-family: "Arial", sans-serif;
       text-align: center;
+      margin: 0;
+      padding: 0;
     }
-    header img {
-      max-width: 400px;
+
+    header {
+      padding: 20px;
+    }
+
+    .logo {
       width: 100%;
-      height: auto;
-      margin: 20px auto;
-      display: block;
+      max-width: 3000px;
+      height: 305px;
+      object-fit: cover;
     }
+
+    h1 {
+      font-size: 20px;
+      margin: 15px 0;
+    }
+
+    .developer {
+      font-size: 14px;
+      color: #ffcc00;
+      animation: shine 3s linear infinite;
+    }
+
+    @keyframes shine {
+      0% { text-shadow: 0 0 5px #fff; }
+      50% { text-shadow: 0 0 20px #ff0; }
+      100% { text-shadow: 0 0 5px #fff; }
+    }
+
     .surah-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 10px;
-      margin: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px;
     }
+
     .surah-list button {
-      padding: 10px;
-      background: #222;
-      color: #fff;
+      background: #333;
+      color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      padding: 10px 15px;
       cursor: pointer;
-      transition: 0.3s;
+      border-radius: 8px;
     }
+
     .surah-list button:hover {
-      background: #444;
+      background: #555;
     }
-    #surah-content {
+
+    #backBtn {
+      background: yellow;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+
+    #ayahs {
       margin: 20px;
       line-height: 2;
       font-size: 18px;
     }
-    #surah-content span {
-      padding: 3px;
-      border-radius: 5px;
-    }
+
     .highlight {
       background: yellow;
       color: black;
+      padding: 2px 4px;
+      border-radius: 4px;
     }
-    #back-btn {
+
+    .hidden {
       display: none;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background: #FFD700;
-      color: black;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    footer {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #ccc;
-    }
-    footer span {
-      display: block;
-      margin: 5px 0;
     }
   </style>
 </head>
 <body>
-
   <header>
-    <img src="moot.png" alt="صدقة جارية">
-    <h2>📅 تاريخ الوفاة: 2025/9/25 😢💔</h2>
-    <h3 style="color:#FFD700; text-shadow: 0 0 10px #FFD700;">
-      ✨ "صدقة جارية حرم رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي"
-    </h3>
+    <img src="logo.png" alt="Logo" class="logo">
+    <h1>صدقة جارية عن حرم رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي</h1>
+    <p class="developer">📅 2025/9/25 | المطور/محمد الصنقري – جميع الحقوق محفوظة 2025 | لتطوير موقع مجاناً تواصل واتساب: 01212843252</p>
   </header>
 
   <main>
-    <div class="surah-list" id="surah-list"></div>
-    <div id="surah-content"></div>
-    <audio id="audio" controls style="margin-top:20px; display:none;"></audio>
-    <button id="back-btn" onclick="goBack()">⬅️ رجوع للقائمة</button>
+    <div id="surah-list" class="surah-list"></div>
+
+    <div id="surah-view" class="hidden">
+      <button id="backBtn">⬅️ رجوع</button>
+      <h2 id="surah-name"></h2>
+      <div id="ayahs"></div>
+      <audio id="player" controls></audio>
+    </div>
   </main>
 
-  <footer>
-    <span>💻 تم التطوير بواسطة: <b>محمد الصنقري</b></span>
-    <span>📞 لتطوير موقع مجانا: 01212843252</span>
-    <span>⚖️ جميع الحقوق محفوظة © 2025</span>
-  </footer>
-
   <script>
-    const surahList = document.getElementById("surah-list");
-    const surahContent = document.getElementById("surah-content");
-    const audioPlayer = document.getElementById("audio");
-    const backBtn = document.getElementById("back-btn");
+    const surahListDiv = document.getElementById("surah-list");
+    const surahView = document.getElementById("surah-view");
+    const surahName = document.getElementById("surah-name");
+    const ayahsDiv = document.getElementById("ayahs");
+    const backBtn = document.getElementById("backBtn");
+    const player = document.getElementById("player");
+
+    let currentAyahs = [];
 
     // جلب قائمة السور
-    fetch("https://api.quran.sutanlab.id/surah")
+    fetch("https://api.alquran.cloud/v1/surah")
       .then(res => res.json())
       .then(data => {
         data.data.forEach(surah => {
           const btn = document.createElement("button");
-          btn.textContent = surah.name.long;
-          btn.onclick = () => loadSurah(surah.number);
-          surahList.appendChild(btn);
+          btn.textContent = surah.name;
+          btn.onclick = () => loadSurah(surah.number, surah.englishName);
+          surahListDiv.appendChild(btn);
         });
       });
 
-    // تحميل السوره
-    function loadSurah(num) {
-      surahList.style.display = "none";
-      backBtn.style.display = "block";
-      surahContent.innerHTML = "";
-      audioPlayer.style.display = "block";
+    // تحميل السورة
+    function loadSurah(num, name) {
+      surahListDiv.classList.add("hidden");
+      surahView.classList.remove("hidden");
+      surahName.textContent = name;
 
-      fetch(`https://api.quran.sutanlab.id/surah/${num}`)
+      fetch(`https://api.alquran.cloud/v1/surah/${num}`)
         .then(res => res.json())
         .then(data => {
-          let ayahIndex = 0;
-          data.data.ayahs.forEach((ayah, index) => {
+          ayahsDiv.innerHTML = "";
+          currentAyahs = data.data.ayahs;
+
+          currentAyahs.forEach((ayah, index) => {
             const span = document.createElement("span");
-            span.textContent = ayah.text.ar + " ";
-            surahContent.appendChild(span);
+            span.textContent = ayah.text + " ";
+            span.id = "ayah-" + index;
+            ayahsDiv.appendChild(span);
           });
 
-          // صوت الشيخ (API ثابت)
-          audioPlayer.src = data.data.ayahs[0].audio.primary;
-          audioPlayer.play();
-
-          // هايلايت أثناء القراءة
-          audioPlayer.ontimeupdate = () => {
-            let currentTime = audioPlayer.currentTime;
-            let ayahs = data.data.ayahs;
-            ayahs.forEach((ayah, i) => {
-              let spans = surahContent.querySelectorAll("span");
-              spans[i].classList.remove("highlight");
-              if (currentTime >= ayah.audio.timestamp?.from && currentTime <= ayah.audio.timestamp?.to) {
-                spans[i].classList.add("highlight");
-              }
-            });
-          };
+          // الصوت (القارئ: مشاري العفاسي)
+          player.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${num}.mp3`;
+          player.play();
         });
     }
 
-    // رجوع للقائمة
-    function goBack() {
-      surahList.style.display = "grid";
-      surahContent.innerHTML = "";
-      audioPlayer.style.display = "none";
-      backBtn.style.display = "none";
-    }
+    // زر الرجوع
+    backBtn.onclick = () => {
+      surahView.classList.add("hidden");
+      surahListDiv.classList.remove("hidden");
+      player.pause();
+      player.src = "";
+    };
   </script>
 </body>
-  </html>
-  
+</html>
