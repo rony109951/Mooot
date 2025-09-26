@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>القرآن الكريم</title>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    @keyframes shine {
+      0% { background-position: -200px 0; }
+      100% { background-position: 200px 0; }
+    }
+    .shiny-text {
+      display: inline-block;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(
+        90deg,
+        #fff,
+        #ffd700,
+        #fff,
+        #ffd700
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s forwards;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-[Amiri]">
+
+  <!-- تاريخ الوفاة واسم -->
+  <div class="text-center py-4">
+    <p class="text-lg">😢💔 تاريخ الوفاة: 2025/9/25</p>
+    <p class="shiny-text">م/محمد الصنقري</p>
+  </div>
+
+  <!-- اللوجو -->
+  <div class="w-full" style="height:1305px;">
+    <img src="moot.png" alt="logo" class="w-full h-full object-cover">
+  </div>
+
+  <!-- النص -->
+  <h2 class="text-center text-yellow-400 text-2xl my-6">
+    صدقة جارية على حرم رمضان عبدالهادي - محمد رمضان الصعيدي "وكل متوفي"
+  </h2>
+
+  <!-- قائمة السور -->
+  <div id="surahList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 p-6"></div>
+
+  <!-- محتوى السورة -->
+  <div id="content" class="hidden text-center p-6 fade-in">
+    <h2 id="surahName" class="text-3xl text-yellow-400 mb-4"></h2>
+    <audio id="player" controls class="w-11/12 mx-auto mb-6"></audio>
+    <img id="surahImg" src="" class="mx-auto border-4 border-yellow-400 rounded-lg shadow-lg">
+  </div>
+
+  <!-- الفوتر -->
+  <footer class="text-center text-gray-400 py-6 mt-10 border-t border-gray-700">
+    <p>تم تطوير الموقع من خلال <span class="text-yellow-400">م/محمد الصنقري</span></p>
+    <p>جميع الحقوق محفوظة © محمد الصنقري 2025</p>
+  </footer>
+
+  <script>
+    const surahs = [
+      "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال",
+      "التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل",
+      "الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور",
+      "الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة",
+      "الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت",
+      "الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات",
+      "ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد",
+      "المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن",
+      "الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن",
+      "المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات",
+      "عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق",
+      "الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح",
+      "التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة",
+      "التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون",
+      "النصر","المسد","الإخلاص","الفلق","الناس"
+    ];
+
+    const surahList = document.getElementById("surahList");
+    const content = document.getElementById("content");
+    const surahName = document.getElementById("surahName");
+    const surahImg = document.getElementById("surahImg");
+    const player = document.getElementById("player");
+
+    // إنشاء أزرار السور
+    surahs.forEach((name, index) => {
+      const div = document.createElement("div");
+      div.className = "bg-gray-900 text-white text-xl py-4 rounded-lg cursor-pointer hover:bg-yellow-400 hover:text-black transition";
+      div.innerText = name;
+      div.onclick = () => {
+        surahName.innerText = name;
+        surahImg.src = `https://quran-images-api.vercel.app/surah/${index+1}.png`;
+        player.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${index+1}.mp3`;
+        content.classList.remove("hidden");
+        content.classList.add("fade-in");
+        window.scrollTo({top: content.offsetTop, behavior:  smooth });
+      };
+      surahList.appendChild(div);
+    });
+  </script>
+</body>
+</html>
