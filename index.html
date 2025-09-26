@@ -8,7 +8,7 @@
   <!-- Meta Tags لمعاينة الرابط -->
   <meta property="og:title" content="موقع قرآن كريم - صدقة جارية">
   <meta property="og:description" content="استمع واقرأ القرآن الكريم كامل بصوت جميل">
-  <meta property="og:image" content="logom.png">
+  <meta property="og:image" content="logo.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://اسم-موقعك.github.io">
 
@@ -19,23 +19,26 @@
       font-family: "Tahoma", sans-serif;
       text-align: center;
     }
-    header {
-      margin: 20px 0;
-    }
     header img {
-      width: 300px;
+      max-width: 600px;
+      width: 100%;
       height: auto;
+      margin: 20px auto;
+      display: block;
+    }
+    .surah-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 20px;
     }
     .surah-list button {
-      display: block;
-      margin: 10px auto;
-      padding: 12px;
-      width: 220px;
+      padding: 10px;
       background: #222;
       color: #fff;
       border: none;
       border-radius: 8px;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
       transition: 0.3s;
     }
@@ -43,9 +46,21 @@
       background: #444;
     }
     #surah-content {
-      margin-top: 20px;
+      margin: 20px;
       white-space: pre-line;
       line-height: 2;
+      font-size: 18px;
+    }
+    #back-btn {
+      display: none;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: crimson;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
     }
     footer {
       margin-top: 40px;
@@ -56,22 +71,15 @@
       display: block;
       margin: 5px 0;
     }
-    .moot-img {
-      max-width: 600px; /* زي الحجم بتاع الصوره اللي وريتهولي */
-      width: 100%;
-      height: auto;
-      margin: 20px auto;
-      display: block;
-    }
   </style>
 </head>
 <body>
 
   <header>
-    <img src="moot.png" alt="صدقة جارية" class="moot-img">
+    <img src="moot.png" alt="صدقة جارية">
     <h2>📅 تاريخ الوفاة: 2025/9/25 😢💔</h2>
     <h3 style="color:#FFD700; text-shadow: 0 0 10px #FFD700;">
-      ✨ صدقة جارية حرم "رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي"
+      ✨ صدقة جارية لروح "رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي"
     </h3>
   </header>
 
@@ -79,6 +87,7 @@
     <div class="surah-list" id="surah-list"></div>
     <div id="surah-content"></div>
     <audio id="audio" controls style="margin-top:20px; display:none;"></audio>
+    <button id="back-btn" onclick="goBack()">⬅️ رجوع للقائمة</button>
   </main>
 
   <footer>
@@ -91,6 +100,7 @@
     const surahList = document.getElementById("surah-list");
     const surahContent = document.getElementById("surah-content");
     const audioPlayer = document.getElementById("audio");
+    const backBtn = document.getElementById("back-btn");
 
     // جلب قائمة السور
     fetch("https://api.alquran.cloud/v1/surah")
@@ -107,6 +117,8 @@
     // تحميل السوره المختاره
     function loadSurah(num) {
       surahList.style.display = "none"; // يخفي القائمه
+      backBtn.style.display = "block";  // زرار رجوع يظهر
+
       fetch(`https://api.alquran.cloud/v1/surah/${num}`)
         .then(res => res.json())
         .then(data => {
@@ -114,12 +126,22 @@
           data.data.ayahs.forEach(ayah => {
             surahContent.textContent += ayah.text + " ";
           });
-          // تشغيل صوت
-          audioPlayer.src = `https://verses.quran.com/${num}.mp3`; 
+
+          // ✅ صوت القارئ عبد الرحمن مسعد (أو أي قارئ موجود في API)
+          audioPlayer.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.abdurrahmaansudais/${num}.mp3`; 
           audioPlayer.style.display = "block";
           audioPlayer.play();
         });
     }
+
+    // زر الرجوع
+    function goBack() {
+      surahList.style.display = "grid";
+      surahContent.textContent = "";
+      audioPlayer.style.display = "none";
+      backBtn.style.display = "none";
+    }
   </script>
 </body>
-</html>
+                              </html>
+                              
