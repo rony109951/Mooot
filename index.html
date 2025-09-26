@@ -4,128 +4,49 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>القرآن الكريم</title>
-
-  <!-- أيقونة المشاركة (واتساب وغيره) -->
-  <meta property="og:title" content="موقع القرآن الكريم">
-  <meta property="og:description" content="تلاوة القرآن الكريم بصوت جميل">
-  <meta property="og:image" content="logo.png">
-  <meta property="og:type" content="website">
-
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      background: black;
-      color: white;
-      font-family: "Arial", sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      padding: 20px;
-    }
-
-    .logo {
-      width: 100%;
-      max-width: 3000px;
-      height: 305px;
-      object-fit: cover;
-    }
-
-    h1 {
-      font-size: 20px;
-      margin: 15px 0;
-    }
-
-    .developer {
-      font-size: 14px;
-      color: #ffcc00;
-      animation: shine 3s linear infinite;
-    }
-
-    @keyframes shine {
-      0% { text-shadow: 0 0 5px #fff; }
-      50% { text-shadow: 0 0 20px #ff0; }
-      100% { text-shadow: 0 0 5px #fff; }
-    }
-
-    .surah-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      padding: 20px;
-    }
-
-    .surah-list button {
-      background: #333;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 8px;
-    }
-
-    .surah-list button:hover {
-      background: #555;
-    }
-
-    #backBtn {
-      background: yellow;
-      color: black;
-      border: none;
-      padding: 10px 20px;
-      margin-bottom: 15px;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 8px;
-    }
-
-    #ayahs {
-      margin: 20px;
-      line-height: 2;
-      font-size: 18px;
-    }
-
-    .highlight {
-      background: yellow;
-      color: black;
-      padding: 2px 4px;
-      border-radius: 4px;
-    }
-
-    .hidden {
-      display: none;
-    }
+    body { background: black; color: white; font-family: "Amiri", serif; }
+    .active-ayah { border-bottom: 3px solid yellow; }
+    .ayah { display: inline-block; margin: 4px; font-size: 20px; }
   </style>
 </head>
-<body>
-  <header>
-    <img src="logo.png" alt="Logo" class="logo">
-    <h1>صدقة جارية عن حرم رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي</h1>
-    <p class="developer">📅 2025/9/25 | المطور/محمد الصنقري – جميع الحقوق محفوظة 2025 | لتطوير موقع مجاناً تواصل واتساب: 01212843252</p>
-  </header>
+<body class="text-white">
 
-  <main>
-    <div id="surah-list" class="surah-list"></div>
+  <!-- اللوجو -->
+  <div class="w-full" style="height:300px;">
+    <img src="moot.png" alt="logo" class="w-full h-full object-cover">
+  </div>
 
-    <div id="surah-view" class="hidden">
-      <button id="backBtn">⬅️ رجوع</button>
-      <h2 id="surah-name"></h2>
-      <div id="ayahs"></div>
-      <audio id="player" controls></audio>
-    </div>
-  </main>
+  <!-- العنوان -->
+  <h2 class="text-center text-yellow-400 text-2xl my-4">
+    صدقة جارية على حرم رمضان عبدالهادي - محمد رمضان الصعيدي "وكل متوفي"
+  </h2>
+
+  <!-- قائمة السور -->
+  <div id="surahList" class="grid grid-cols-2 gap-4 p-4"></div>
+
+  <!-- محتوى السورة -->
+  <div id="content" class="hidden text-center p-6">
+    <button id="backBtn" class="bg-yellow-500 text-black px-4 py-2 rounded mb-4">⬅️ رجوع</button>
+    <h2 id="surahName" class="text-3xl text-yellow-400 mb-4"></h2>
+    <audio id="player" controls class="w-11/12 mx-auto mb-6"></audio>
+    <div id="ayahs" class="text-xl leading-loose"></div>
+  </div>
+
+  <!-- الفوتر -->
+  <footer class="text-center text-gray-400 py-6 mt-10 border-t border-gray-700">
+    <p>تم تطوير موقع مجانا للتواصل واتساب فقط: <span class="text-yellow-400">01212843252</span></p>
+    <p>جميع الحقوق محفوظة © 2025</p>
+  </footer>
 
   <script>
-    const surahListDiv = document.getElementById("surah-list");
-    const surahView = document.getElementById("surah-view");
-    const surahName = document.getElementById("surah-name");
+    const surahListDiv = document.getElementById("surahList");
+    const content = document.getElementById("content");
+    const surahNameEl = document.getElementById("surahName");
     const ayahsDiv = document.getElementById("ayahs");
-    const backBtn = document.getElementById("backBtn");
     const player = document.getElementById("player");
-
-    let currentAyahs = [];
+    const backBtn = document.getElementById("backBtn");
 
     // جلب قائمة السور
     fetch("https://api.alquran.cloud/v1/surah")
@@ -133,43 +54,50 @@
       .then(data => {
         data.data.forEach(surah => {
           const btn = document.createElement("button");
+          btn.className = "bg-gray-800 hover:bg-yellow-400 hover:text-black text-white py-3 rounded-lg transition";
           btn.textContent = surah.name;
-          btn.onclick = () => loadSurah(surah.number, surah.englishName);
+          btn.onclick = () => loadSurah(surah.number, surah.name);
           surahListDiv.appendChild(btn);
         });
       });
 
     // تحميل السورة
-    function loadSurah(num, name) {
+    async function loadSurah(number, name) {
       surahListDiv.classList.add("hidden");
-      surahView.classList.remove("hidden");
-      surahName.textContent = name;
+      content.classList.remove("hidden");
+      surahNameEl.textContent = name;
 
-      fetch(`https://api.alquran.cloud/v1/surah/${num}`)
-        .then(res => res.json())
-        .then(data => {
-          ayahsDiv.innerHTML = "";
-          currentAyahs = data.data.ayahs;
+      // النص
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${number}`);
+      const data = await res.json();
+      ayahsDiv.innerHTML = "";
+      data.data.ayahs.forEach((ayah, i) => {
+        const span = document.createElement("span");
+        span.className = "ayah";
+        span.id = "ayah-" + i;
+        span.textContent = ayah.text + " ";
+        ayahsDiv.appendChild(span);
+      });
 
-          currentAyahs.forEach((ayah, index) => {
-            const span = document.createElement("span");
-            span.textContent = ayah.text + " ";
-            span.id = "ayah-" + index;
-            ayahsDiv.appendChild(span);
-          });
+      // الصوت (مشاري راشد)
+      player.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${number}.mp3`;
+      player.play();
 
-          // الصوت (القارئ: مشاري العفاسي)
-          player.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${num}.mp3`;
-          player.play();
-        });
+      // تحديد الآية (كاريوكي بسيط حسب التوقيت)
+      player.ontimeupdate = () => {
+        const currentTime = player.currentTime;
+        const index = Math.floor(currentTime / 5); // تقريب: كل آية ~5 ثواني
+        document.querySelectorAll(".ayah").forEach(a => a.classList.remove("active-ayah"));
+        const active = document.getElementById("ayah-" + index);
+        if (active) active.classList.add("active-ayah");
+      };
     }
 
-    // زر الرجوع
+    // رجوع للقائمة
     backBtn.onclick = () => {
-      surahView.classList.add("hidden");
+      content.classList.add("hidden");
       surahListDiv.classList.remove("hidden");
       player.pause();
-      player.src = "";
     };
   </script>
 </body>
