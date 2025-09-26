@@ -5,13 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>موقع قرآن كريم</title>
 
-  <!-- Meta Tags لمعاينة الرابط -->
-  <meta property="og:title" content="موقع قرآن كريم - صدقة جارية">
-  <meta property="og:description" content="استمع واقرأ القرآن الكريم كامل بصوت جميل">
-  <meta property="og:image" content="logo.png">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://اسم-موقعك.github.io">
-
   <style>
     body {
       background: #000;
@@ -26,11 +19,15 @@
       width: 300px;
       height: auto;
     }
+    .surah-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
     .surah-list button {
-      display: block;
-      margin: 10px auto;
+      flex: 0 0 45%; /* كل زر ياخد حوالي نصف العرض */
       padding: 12px;
-      width: 220px;
       background: #222;
       color: #fff;
       border: none;
@@ -57,11 +54,15 @@
       margin: 5px 0;
     }
     .moot-img {
-      max-width: 600px; /* زي الحجم بتاع الصوره اللي وريتهولي */
+      max-width: 600px;
       width: 100%;
       height: auto;
       margin: 20px auto;
       display: block;
+    }
+    audio {
+      width: 90%;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -78,7 +79,7 @@
   <main>
     <div class="surah-list" id="surah-list"></div>
     <div id="surah-content"></div>
-    <audio id="audio" controls style="margin-top:20px; display:none;"></audio>
+    <audio id="audio" controls style="display:none;"></audio>
   </main>
 
   <footer>
@@ -106,21 +107,23 @@
 
     // تحميل السوره المختاره
     function loadSurah(num) {
-      surahList.style.display = "none"; // يخفي القائمه
-      fetch(`https://api.alquran.cloud/v1/surah/${num}`)
+      surahContent.textContent = "جارٍ التحميل...";
+      fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`)
         .then(res => res.json())
         .then(data => {
           surahContent.textContent = "";
           data.data.ayahs.forEach(ayah => {
             surahContent.textContent += ayah.text + " ";
           });
-          // تشغيل صوت
-          audioPlayer.src = `https://verses.quran.com/${num}.mp3`; 
+          // تشغيل صوت الشيخ
+          audioPlayer.src = `https://everyayah.com/data/Alafasy/${num}.mp3`;
           audioPlayer.style.display = "block";
           audioPlayer.play();
+        }).catch(err => {
+          surahContent.textContent = "❌ حدث خطأ في تحميل السورة";
+          console.error(err);
         });
     }
   </script>
 </body>
-  </html>
-  
+</html>
