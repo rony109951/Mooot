@@ -1,12 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>القرآن الكريم</title>
+  <title>no</title>
+
+  <!-- Meta for link preview -->
+  <meta property="og:title" content="no">
+  <meta property="og:description" content="لتطوير موقع مجانا تواصل واتساب فقط 01212843252">
+  <meta property="og:image" content="moot.png">
+  <meta property="og:type" content="website">
+
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     html { scroll-behavior: smooth; }
     @keyframes shine {
@@ -36,29 +43,26 @@
       animation: fadeIn 1s forwards;
     }
     @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body class="bg-black text-white font-[Amiri]">
 
-  <!-- تاريخ الوفاة واسم -->
+  <!-- تاريخ الوفاة -->
   <div class="text-center py-4">
     <p class="text-lg">😢💔 تاريخ الوفاة: 2025/9/25</p>
-    <p class="shiny-text">م/محمد الصنقري</p>
+    <p class="shiny-text">لتطوير موقع مجانا</p>
   </div>
 
   <!-- اللوجو -->
-  <div class="w-full" style="height:1305px;">
+  <div class="w-full" style="height:400px;">
     <img src="moot.png" alt="logo" class="w-full h-full object-cover">
   </div>
 
   <!-- النص -->
   <h2 class="text-center text-yellow-400 text-2xl my-6">
-    صدقة جارية على حرم رمضان عبدالهادي - محمد رمضان الصعيدي "وكل متوفي"
+    صدقة جارية على روح رمضان عبدالهادي - محمد رمضان الصعيدي "وكل متوفي"
   </h2>
 
   <!-- قائمة السور -->
@@ -68,13 +72,13 @@
   <div id="content" class="hidden text-center p-6 fade-in">
     <h2 id="surahName" class="text-3xl text-yellow-400 mb-4"></h2>
     <audio id="player" controls class="w-11/12 mx-auto mb-6"></audio>
-    <img id="surahImg" src="" class="mx-auto border-4 border-yellow-400 rounded-lg shadow-lg">
+    <div id="surahText" class="text-xl leading-loose space-y-2"></div>
   </div>
 
   <!-- الفوتر -->
   <footer class="text-center text-gray-400 py-6 mt-10 border-t border-gray-700">
-    <p>تم تطوير الموقع من خلال <span class="text-yellow-400">م/محمد الصنقري</span></p>
-    <p>جميع الحقوق محفوظة © محمد الصنقري 2025</p>
+    <p>لتطوير موقع مجانا تواصل واتساب فقط <span class="text-yellow-400">01212843252</span></p>
+    <p>جميع الحقوق محفوظة © 2025</p>
   </footer>
 
   <script>
@@ -99,7 +103,7 @@
     const surahList = document.getElementById("surahList");
     const content = document.getElementById("content");
     const surahName = document.getElementById("surahName");
-    const surahImg = document.getElementById("surahImg");
+    const surahText = document.getElementById("surahText");
     const player = document.getElementById("player");
 
     // إنشاء أزرار السور
@@ -107,12 +111,27 @@
       const div = document.createElement("div");
       div.className = "bg-gray-900 text-white text-xl py-4 rounded-lg cursor-pointer hover:bg-yellow-400 hover:text-black transition";
       div.innerText = name;
-      div.onclick = () => {
+      div.onclick = async () => {
         surahName.innerText = name;
-        surahImg.src = `https://quran-images-api.vercel.app/surah/${index+1}.png`;
         player.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${index+1}.mp3`;
         content.classList.remove("hidden");
         content.classList.add("fade-in");
+
+        // جلب النص من API
+        surahText.innerHTML = "جارٍ التحميل...";
+        const res = await fetch(`https://api.alquran.cloud/v1/surah/${index+1}`);
+        const data = await res.json();
+        if (data.code === 200) {
+          surahText.innerHTML = "";
+          data.data.ayahs.forEach(ayah => {
+            const span = document.createElement("span");
+            span.innerText = ayah.text + " ﴿" + ayah.numberInSurah + "﴾ ";
+            surahText.appendChild(span);
+          });
+        } else {
+          surahText.innerHTML = "تعذر تحميل السورة.";
+        }
+
         window.scrollTo({top: content.offsetTop, behavior:  smooth });
       };
       surahList.appendChild(div);
