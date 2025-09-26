@@ -30,6 +30,13 @@
       margin: 0 auto;
       display: block;
     }
+    #surahText {
+      font-size: 1.3rem;
+      line-height: 2.2rem;
+      color: #f9f9f9;
+      margin-top: 20px;
+      text-align: justify;
+    }
   </style>
 </head>
 <body class="bg-black text-white font-[Amiri]">
@@ -60,7 +67,8 @@
   <div id="content" class="hidden text-center p-6">
     <h2 id="surahName" class="text-3xl text-yellow-400 mb-4"></h2>
     <audio id="player" controls class="w-11/12 mx-auto mb-6"></audio>
-    <button onclick="goBack()" class="bg-yellow-400 text-black px-6 py-2 rounded-lg">⬅ رجوع</button>
+    <div id="surahText" class="bg-gray-900 p-4 rounded-lg shadow-lg"></div>
+    <button onclick="goBack()" class="bg-yellow-400 text-black px-6 py-2 mt-6 rounded-lg">⬅ رجوع</button>
   </div>
 
   <!-- الفوتر -->
@@ -92,6 +100,7 @@
     const surahList = document.getElementById("surahList");
     const content = document.getElementById("content");
     const surahName = document.getElementById("surahName");
+    const surahText = document.getElementById("surahText");
     const player = document.getElementById("player");
     const reciterSelect = document.getElementById("reciter");
 
@@ -100,7 +109,7 @@
       const div = document.createElement("div");
       div.className = "bg-gray-900 text-white text-xl py-4 rounded-lg cursor-pointer hover:bg-yellow-400 hover:text-black transition text-center";
       div.innerText = name;
-      div.onclick = () => {
+      div.onclick = async () => {
         const surahNumber = String(index + 1).padStart(3, "0");
         const reciter = reciterSelect.value;
         let url = "";
@@ -113,6 +122,12 @@
 
         surahName.innerText = name;
         player.src = url;
+
+        // جلب النصوص من API
+        const res = await fetch(`https://api.quran.com/v4/quran/verses/uthmani?chapter_number=${index+1}`);
+        const data = await res.json();
+        const verses = data.verses.map(v => v.text_uthmani).join(" ");
+        surahText.innerText = verses;
 
         surahList.classList.add("hidden");
         content.classList.remove("hidden");
@@ -127,5 +142,4 @@
     }
   </script>
 </body>
-    </html>
-  
+</html>
