@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>موقع قرآن كريم</title>
 
-  <!-- Meta Tags لمعاينة الرابط -->
+  <!-- Meta Tags -->
   <meta property="og:title" content="موقع قرآن كريم - صدقة جارية">
-  <meta property="og:description" content="استمع واقرأ القرآن الكريم كامل بصوت جميل">
+  <meta property="og:description" content="استمع واقرأ القرآن الكريم كامل">
   <meta property="og:image" content="logo.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://اسم-موقعك.github.io">
+  <meta property="og:url" content="https://your-site.github.io/">
+
+  <link rel="icon" href="logo.png" type="image/png">
 
   <style>
     body {
@@ -20,7 +22,7 @@
       text-align: center;
     }
     header img {
-      max-width: 600px;
+      max-width: 400px;
       width: 100%;
       height: auto;
       margin: 20px auto;
@@ -47,16 +49,23 @@
     }
     #surah-content {
       margin: 20px;
-      white-space: pre-line;
       line-height: 2;
       font-size: 18px;
+    }
+    #surah-content span {
+      padding: 3px;
+      border-radius: 5px;
+    }
+    .highlight {
+      background: yellow;
+      color: black;
     }
     #back-btn {
       display: none;
       margin: 20px auto;
       padding: 10px 20px;
-      background: crimson;
-      color: white;
+      background: #FFD700;
+      color: black;
       border: none;
       border-radius: 8px;
       font-size: 16px;
@@ -79,7 +88,7 @@
     <img src="moot.png" alt="صدقة جارية">
     <h2>📅 تاريخ الوفاة: 2025/9/25 😢💔</h2>
     <h3 style="color:#FFD700; text-shadow: 0 0 10px #FFD700;">
-      ✨ صدقة جارية لروح "رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي"
+      ✨ "صدقة جارية حرم رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي"
     </h3>
   </header>
 
@@ -103,45 +112,61 @@
     const backBtn = document.getElementById("back-btn");
 
     // جلب قائمة السور
-    fetch("https://api.alquran.cloud/v1/surah")
+    fetch("https://api.quran.sutanlab.id/surah")
       .then(res => res.json())
       .then(data => {
         data.data.forEach(surah => {
           const btn = document.createElement("button");
-          btn.textContent = surah.name;
+          btn.textContent = surah.name.long;
           btn.onclick = () => loadSurah(surah.number);
           surahList.appendChild(btn);
         });
       });
 
-    // تحميل السوره المختاره
+    // تحميل السوره
     function loadSurah(num) {
-      surahList.style.display = "none"; // يخفي القائمه
-      backBtn.style.display = "block";  // زرار رجوع يظهر
+      surahList.style.display = "none";
+      backBtn.style.display = "block";
+      surahContent.innerHTML = "";
+      audioPlayer.style.display = "block";
 
-      fetch(`https://api.alquran.cloud/v1/surah/${num}`)
+      fetch(`https://api.quran.sutanlab.id/surah/${num}`)
         .then(res => res.json())
         .then(data => {
-          surahContent.textContent = "";
-          data.data.ayahs.forEach(ayah => {
-            surahContent.textContent += ayah.text + " ";
+          let ayahIndex = 0;
+          data.data.ayahs.forEach((ayah, index) => {
+            const span = document.createElement("span");
+            span.textContent = ayah.text.ar + " ";
+            surahContent.appendChild(span);
           });
 
-          // ✅ صوت القارئ عبد الرحمن مسعد (أو أي قارئ موجود في API)
-          audioPlayer.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.abdurrahmaansudais/${num}.mp3`; 
-          audioPlayer.style.display = "block";
+          // صوت الشيخ (API ثابت)
+          audioPlayer.src = data.data.ayahs[0].audio.primary;
           audioPlayer.play();
+
+          // هايلايت أثناء القراءة
+          audioPlayer.ontimeupdate = () => {
+            let currentTime = audioPlayer.currentTime;
+            let ayahs = data.data.ayahs;
+            ayahs.forEach((ayah, i) => {
+              let spans = surahContent.querySelectorAll("span");
+              spans[i].classList.remove("highlight");
+              if (currentTime >= ayah.audio.timestamp?.from && currentTime <= ayah.audio.timestamp?.to) {
+                spans[i].classList.add("highlight");
+              }
+            });
+          };
         });
     }
 
-    // زر الرجوع
+    // رجوع للقائمة
     function goBack() {
       surahList.style.display = "grid";
-      surahContent.textContent = "";
+      surahContent.innerHTML = "";
       audioPlayer.style.display = "none";
       backBtn.style.display = "none";
     }
   </script>
 </body>
-                              </html>
-                              
+  </html>
+  
