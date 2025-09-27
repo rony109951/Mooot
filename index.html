@@ -46,8 +46,8 @@
     text-align: right;
     direction: rtl;
   }
-  #back-btn {
-    margin: 15px 0;
+  #back-btn, #toggle-audio-btn {
+    margin: 15px 5px;
     padding: 10px 20px;
     background: #444;
     color: #fff;
@@ -56,7 +56,7 @@
     cursor: pointer;
     display: none;
   }
-  #back-btn:hover {
+  #back-btn:hover, #toggle-audio-btn:hover {
     background: #666;
   }
   audio {
@@ -77,15 +77,16 @@
   }
   .footer-note {
     margin-top: 20px;
-    color: yellow;
-    font-size: 18px;
-    font-weight: bold;
     background: linear-gradient(90deg, yellow, orange, yellow);
     background-size: 200% auto;
     animation: shine 2s linear infinite;
     display: inline-block;
-    padding: 5px 10px;
+    padding: 5px 15px;
     border-radius: 5px;
+  }
+  .footer-note span {
+    color: white;
+    font-weight: bold;
   }
   @keyframes shine {
     to { background-position: 200% center; }
@@ -120,11 +121,12 @@
 
 <main>
   <div class="surah-list" id="surah-list"></div>
-  <button id="back-btn" onclick="goBack()">🔙 رجوع </button>
+  <button id="back-btn" onclick="goBack()">🔙 رجوع</button>
   <select id="sheikh-select"></select>
   <audio id="audio" controls></audio>
+  <button id="toggle-audio-btn" onclick="toggleAudio()">▶ تشغيل / ❚❚ إيقاف الصوت</button>
   <div id="surah-content"></div>
-  <div class="footer-note"> مطوّر الموقع/محمد الصنقري</div>
+  <div class="footer-note"><span>مطوّر الموقع / محمد الصنقري</span></div>
 </main>
 
 <footer>
@@ -139,12 +141,13 @@ const surahContent = document.getElementById("surah-content");
 const audioPlayer = document.getElementById("audio");
 const backBtn = document.getElementById("back-btn");
 const sheikhSelect = document.getElementById("sheikh-select");
+const toggleAudioBtn = document.getElementById("toggle-audio-btn");
 
-// قائمة المشايخ وروابطهم في everyayah.com أو مصادر آمنة
+// قائمة المشايخ وروابطهم
 const sheikhs = {
   "العفاسي": "Alafasy",
   "مشاري راشد": "Mishary_Rashed_Alafasy",
-  "عبد الرحمن مسعد": "Abd_Elrahman_Mosad" // مثال، يمكن تعديل الرابط
+  "عبد الرحمن مسعد": "Abd_Elrahman_Mosad"
 };
 
 // جلب قائمة السور
@@ -165,6 +168,7 @@ function loadSurah(num) {
   backBtn.style.display = "inline-block";
   surahContent.textContent = "جارٍ التحميل...";
   audioPlayer.style.display = "none";
+  toggleAudioBtn.style.display = "none";
 
   // تحميل النص
   fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`)
@@ -191,7 +195,9 @@ function loadSurah(num) {
     if (!this.value) return;
     audioPlayer.src = `https://everyayah.com/data/${this.value}/${num}.mp3`;
     audioPlayer.style.display = "block";
+    toggleAudioBtn.style.display = "inline-block";
     audioPlayer.play().catch(err => console.log("مشكلة في تشغيل الصوت:", err));
+    toggleAudioBtn.textContent = "❚❚ إيقاف الصوت";
   };
 }
 
@@ -203,6 +209,18 @@ function goBack() {
   audioPlayer.pause();
   audioPlayer.style.display = "none";
   sheikhSelect.style.display = "none";
+  toggleAudioBtn.style.display = "none";
+}
+
+// زر تشغيل/إيقاف الصوت
+function toggleAudio() {
+  if (audioPlayer.paused) {
+    audioPlayer.play().catch(err => console.log("مشكلة في تشغيل الصوت:", err));
+    toggleAudioBtn.textContent = "❚❚ إيقاف الصوت";
+  } else {
+    audioPlayer.pause();
+    toggleAudioBtn.textContent = "▶ تشغيل الصوت";
+  }
 }
 </script>
 
