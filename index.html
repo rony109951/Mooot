@@ -11,7 +11,7 @@
   .surah-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
   .surah-list button { flex: 0 0 45%; padding: 12px; background: #222; color: #fff; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: 0.3s; }
   .surah-list button:hover { background: #444; }
-  #surah-content { margin-top: 20px; white-space: pre-line; line-height: 2; text-align: right; direction: rtl; }
+  #surah-content { margin-top: 20px; line-height: 2; text-align: right; direction: rtl; }
   #back-btn, #toggle-audio-btn { margin: 15px 5px; padding: 10px 20px; background: #444; color: #fff; border: none; border-radius: 8px; cursor: pointer; display: none; }
   #back-btn:hover, #toggle-audio-btn:hover { background: #666; }
   audio { width: 90%; margin-top: 20px; display: none; }
@@ -56,13 +56,13 @@ const backBtn = document.getElementById("back-btn");
 const sheikhSelect = document.getElementById("sheikh-select");
 const toggleAudioBtn = document.getElementById("toggle-audio-btn");
 
-// قائمة الشيوخ المتاحة على EveryAyah مع صيغة الروابط الصحيحة
+// الشيوخ المتوفرين على EveryAyah
 const sheikhs = {
   "العفاسي": "Alafasy",
   "مشاري راشد": "Mishary_Rashed_Alafasy",
   "عبد الرحمن مسعد": "Abd_Elrahman_Mosad",
-  "الشيخ سعود الشريم": "Saud_Shuraym",
-  "الشيخ ماهر المعيقلي": "Maher_AlMuaiqly"
+  "سعود الشريم": "Saud_Shuraym",
+  "ماهر المعيقلي": "Maher_AlMuaiqly"
 };
 
 // جلب قائمة السور
@@ -88,8 +88,8 @@ function loadSurah(num) {
     .then(res => res.json())
     .then(data => {
       surahContent.textContent = "";
-      data.data.ayahs.forEach(ayah => {
-        surahContent.textContent += ayah.text + "\n";
+      data.data.ayahs.forEach((ayah, index) => {
+        surahContent.innerHTML += `<span>(${index+1})</span> ${ayah.text}<br>`;
       });
     });
 
