@@ -1,137 +1,135 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>موقع قرآن كريم</title>
-<style>
-  body { background: #000; color: #fff; font-family: "Tahoma", sans-serif; text-align: center; }
-  header { margin: 20px 0; }
-  header img { width: 300px; height: auto; }
-  .surah-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-  .surah-list button { flex: 0 0 45%; padding: 12px; background: #222; color: #fff; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: 0.3s; }
-  .surah-list button:hover { background: #444; }
-  #surah-content { margin-top: 20px; line-height: 2; text-align: right; direction: rtl; }
-  #back-btn, #toggle-audio-btn { margin: 15px 5px; padding: 10px 20px; background: #444; color: #fff; border: none; border-radius: 8px; cursor: pointer; display: none; }
-  #back-btn:hover, #toggle-audio-btn:hover { background: #666; }
-  audio { width: 90%; margin-top: 20px; display: none; }
-  #sheikh-select { margin-top: 20px; padding: 10px; font-size: 18px; display: none; border-radius: 8px; border: none; background: #222; color: #fff; cursor: pointer; }
-  .footer-note { margin-top: 20px; background: linear-gradient(90deg, yellow, orange, yellow); background-size: 200% auto; animation: shine 2s linear infinite; display: inline-block; padding: 5px 15px; border-radius: 5px; }
-  .footer-note span { color: white; font-weight: bold; }
-  @keyframes shine { to { background-position: 200% center; } }
-  footer { margin-top: 40px; font-size: 14px; color: #ccc; }
-  footer span { display: block; margin: 5px 0; }
-  .moot-img { max-width: 600px; width: 100%; height: auto; margin: 20px auto; display: block; }
-</style>
-</head>
-<body>
+<html lang="ar" dir="rtl">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>موقع قرآن كريم</title>  
+<style>  
+  body { background: #000; color: #fff; font-family: "Tahoma", sans-serif; text-align: center; }  
+  header { margin: 20px 0; }  
+  header img { width: 300px; height: auto; }  
+  .surah-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }  
+  .surah-list button { flex: 0 0 45%; padding: 12px; background: #222; color: #fff; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: 0.3s; }  
+  .surah-list button:hover { background: #444; }  
+  #surah-content { margin-top: 20px; line-height: 2; text-align: right; direction: rtl; }  
+  #back-btn, #toggle-audio-btn { margin: 15px 5px; padding: 10px 20px; background: #444; color: #fff; border: none; border-radius: 8px; cursor: pointer; display: none; }  
+  #back-btn:hover, #toggle-audio-btn:hover { background: #666; }  
+  audio { width: 90%; margin-top: 20px; display: none; }  
+  #sheikh-select { margin-top: 20px; padding: 10px; font-size: 18px; display: none; border-radius: 8px; border: none; background: #222; color: #fff; cursor: pointer; }  
+  .footer-note { margin-top: 20px; background: linear-gradient(90deg, yellow, orange, yellow); background-size: 200% auto; animation: shine 2s linear infinite; display: inline-block; padding: 5px 15px; border-radius: 5px; }  
+  .footer-note span { color: white; font-weight: bold; }  
+  @keyframes shine { to { background-position: 200% center; } }  
+  footer { margin-top: 40px; font-size: 14px; color: #ccc; }  
+  footer span { display: block; margin: 5px 0; }  
+  .moot-img { max-width: 600px; width: 100%; height: auto; margin: 20px auto; display: block; }  
+</style>  
+</head>  
+<body>  
+<header>  
+  <img src="moot.png" alt="صدقة جارية" class="moot-img">  
+  <h2>📅 تاريخ الوفاة: 2025/9/25 😢💔</h2>  
+  <h3 style="color:#FFD700; text-shadow: 0 0 10px #FFD700;">✨ "صدقة جارية حرم رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي"</h3>  
+</header>  
+<main>  
+  <div class="surah-list" id="surah-list"></div>  
+  <button id="back-btn" onclick="goBack()">🔙 رجوع</button>  
+  <select id="sheikh-select"></select>  
+  <audio id="audio" controls></audio>  
+  <button id="toggle-audio-btn" onclick="toggleAudio()">▶ تشغيل / ❚❚ إيقاف الصوت</button>  
+  <div id="surah-content"></div>  
+  <div class="footer-note"><span>مطوّر الموقع / محمد الصنقري</span></div>  
+</main>  
+<footer>  
+  <span>💻 تم التطوير بواسطة: <b>محمد الصنقري</b></span>  
+  <span>📞 لتطوير موقع مجانا: 01212843252</span>  
+  <span>⚖️ جميع الحقوق محفوظة © 2025</span>  
+</footer>  
 
-<header>
-  <img src="moot.png" alt="صدقة جارية" class="moot-img">
-  <h2>📅 تاريخ الوفاة: 2025/9/25 😢💔</h2>
-  <h3 style="color:#FFD700; text-shadow: 0 0 10px #FFD700;">✨ "صدقة جارية حرم رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي"</h3>
-</header>
-
-<main>
-  <div class="surah-list" id="surah-list"></div>
-  <button id="back-btn" onclick="goBack()">🔙 رجوع</button>
-  <select id="sheikh-select"></select>
-  <audio id="audio" controls></audio>
-  <button id="toggle-audio-btn" onclick="toggleAudio()">▶ تشغيل / ❚❚ إيقاف الصوت</button>
-  <div id="surah-content"></div>
-  <div class="footer-note"><span>مطوّر الموقع / محمد الصنقري</span></div>
-</main>
-
-<footer>
-  <span>💻 تم التطوير بواسطة: <b>محمد الصنقري</b></span>
-  <span>📞 لتطوير موقع مجانا: 01212843252</span>
-  <span>⚖️ جميع الحقوق محفوظة © 2025</span>
-</footer>
-
-<script>
-const surahList = document.getElementById("surah-list");
-const surahContent = document.getElementById("surah-content");
-const audioPlayer = document.getElementById("audio");
-const backBtn = document.getElementById("back-btn");
-const sheikhSelect = document.getElementById("sheikh-select");
-const toggleAudioBtn = document.getElementById("toggle-audio-btn");
-
-// الشيوخ المتوفرين على EveryAyah
-const sheikhs = {
-  "العفاسي": "Alafasy",
-  "مشاري راشد": "Mishary_Rashed_Alafasy",
-  "عبد الرحمن مسعد": "Abd_Elrahman_Mosad",
-  "سعود الشريم": "Saud_Shuraym",
-  "ماهر المعيقلي": "Maher_AlMuaiqly"
-};
-
-// جلب قائمة السور
-fetch("https://api.alquran.cloud/v1/surah")
-  .then(res => res.json())
-  .then(data => {
-    data.data.forEach(surah => {
-      const btn = document.createElement("button");
-      btn.textContent = surah.name;
-      btn.onclick = () => loadSurah(surah.number);
-      surahList.appendChild(btn);
-    });
-  });
-
-function loadSurah(num) {
-  surahList.style.display = "none";
-  backBtn.style.display = "inline-block";
-  surahContent.textContent = "جارٍ التحميل...";
-  audioPlayer.style.display = "none";
-  toggleAudioBtn.style.display = "none";
-
-  fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`)
-    .then(res => res.json())
-    .then(data => {
-      surahContent.textContent = "";
-      data.data.ayahs.forEach((ayah, index) => {
-        surahContent.innerHTML += `<span>(${index+1})</span> ${ayah.text}<br>`;
-      });
-    });
-
-  sheikhSelect.style.display = "inline-block";
-  sheikhSelect.innerHTML = `<option value="">اختر الشيخ</option>`;
-  for (const key in sheikhs) {
-    const opt = document.createElement("option");
-    opt.value = sheikhs[key];
-    opt.textContent = key;
-    sheikhSelect.appendChild(opt);
-  }
-
-  sheikhSelect.onchange = function() {
-    if (!this.value) return;
-    audioPlayer.src = `https://everyayah.com/data/${this.value}/${num}.mp3`;
-    audioPlayer.style.display = "block";
-    toggleAudioBtn.style.display = "inline-block";
-    audioPlayer.play().catch(err => console.log("مشكلة في تشغيل الصوت:", err));
-    toggleAudioBtn.textContent = "❚❚ إيقاف الصوت";
-  };
-}
-
-function goBack() {
-  surahList.style.display = "flex";
-  backBtn.style.display = "none";
-  surahContent.textContent = "";
-  audioPlayer.pause();
-  audioPlayer.style.display = "none";
-  sheikhSelect.style.display = "none";
-  toggleAudioBtn.style.display = "none";
-}
-
-function toggleAudio() {
-  if (audioPlayer.paused) {
-    audioPlayer.play().catch(err => console.log("مشكلة في تشغيل الصوت:", err));
-    toggleAudioBtn.textContent = "❚❚ إيقاف الصوت";
-  } else {
-    audioPlayer.pause();
-    toggleAudioBtn.textContent = "▶ تشغيل الصوت";
-  }
-}
-</script>
-
-</body>
+<script>  
+const surahList = document.getElementById("surah-list");  
+const surahContent = document.getElementById("surah-content");  
+const audioPlayer = document.getElementById("audio");  
+const backBtn = document.getElementById("back-btn");  
+const sheikhSelect = document.getElementById("sheikh-select");  
+const toggleAudioBtn = document.getElementById("toggle-audio-btn");  
+  
+// الشيوخ المتوفرين  
+const sheikhs = {  
+  "العفاسي": "Alafasy",  
+  "مشاري راشد": "Mishary_Rashed_Alafasy",  
+  "عبد الرحمن مسعد": "Abd_Elrahman_Mosad",  
+  "سعود الشريم": "Saud_Shuraym",  
+  "ماهر المعيقلي": "Maher_AlMuaiqly"  
+};  
+  
+// جلب قائمة السور  
+fetch("https://api.alquran.cloud/v1/surah")  
+  .then(res => res.json())  
+  .then(data => {  
+    data.data.forEach(surah => {  
+      const btn = document.createElement("button");  
+      btn.textContent = surah.name;  
+      btn.onclick = () => loadSurah(surah.number);  
+      surahList.appendChild(btn);  
+    });  
+  });  
+  
+function loadSurah(num) {  
+  surahList.style.display = "none";  
+  backBtn.style.display = "inline-block";  
+  surahContent.textContent = "جارٍ التحميل...";  
+  audioPlayer.style.display = "none";  
+  toggleAudioBtn.style.display = "none";  
+  
+  // جلب النص مع ترقيم الآيات بالرمز ۞  
+  fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`)  
+    .then(res => res.json())  
+    .then(data => {  
+      surahContent.innerHTML = "";  
+      data.data.ayahs.forEach(ayah => {  
+        surahContent.innerHTML += `${ayah.text}۞<br>`;  
+      });  
+    });  
+  
+  sheikhSelect.style.display = "inline-block";  
+  sheikhSelect.innerHTML = `<option value="">اختر الشيخ</option>`;  
+  for (const key in sheikhs) {  
+    const opt = document.createElement("option");  
+    opt.value = sheikhs[key];  
+    opt.textContent = key;  
+    sheikhSelect.appendChild(opt);  
+  }  
+  
+  // تشغيل الصوت كامل للسورة المختارة  
+  sheikhSelect.onchange = function() {  
+    if (!this.value) return;  
+    audioPlayer.src = `https://everyayah.com/data/${this.value}/${num}.mp3`;  
+    audioPlayer.style.display = "block";  
+    toggleAudioBtn.style.display = "inline-block";  
+    audioPlayer.play().catch(err => console.log("مشكلة في تشغيل الصوت:", err));  
+    toggleAudioBtn.textContent = "❚❚ إيقاف الصوت";  
+  };  
+}  
+  
+function goBack() {  
+  surahList.style.display = "flex";  
+  backBtn.style.display = "none";  
+  surahContent.textContent = "";  
+  audioPlayer.pause();  
+  audioPlayer.style.display = "none";  
+  sheikhSelect.style.display = "none";  
+  toggleAudioBtn.style.display = "none";  
+}  
+  
+function toggleAudio() {  
+  if (audioPlayer.paused) {  
+    audioPlayer.play().catch(err => console.log("مشكلة في تشغيل الصوت:", err));  
+    toggleAudioBtn.textContent = "❚❚ إيقاف الصوت";  
+  } else {  
+    audioPlayer.pause();  
+    toggleAudioBtn.textContent = "▶ تشغيل الصوت";  
+  }  
+}  
+</script>  
+</body>  
 </html>
