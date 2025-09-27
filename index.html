@@ -4,109 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>موقع قرآن كريم</title>
-
 <style>
-  body {
-    background: #000;
-    color: #fff;
-    font-family: "Tahoma", sans-serif;
-    text-align: center;
-  }
-  header {
-    margin: 20px 0;
-  }
-  header img {
-    width: 300px;
-    height: auto;
-  }
-  .surah-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  .surah-list button {
-    flex: 0 0 45%;
-    padding: 12px;
-    background: #222;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  .surah-list button:hover {
-    background: #444;
-  }
-  #surah-content {
-    margin-top: 20px;
-    white-space: pre-line;
-    line-height: 2;
-    text-align: right;
-    direction: rtl;
-  }
-  #back-btn, #toggle-audio-btn {
-    margin: 15px 5px;
-    padding: 10px 20px;
-    background: #444;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    display: none;
-  }
-  #back-btn:hover, #toggle-audio-btn:hover {
-    background: #666;
-  }
-  audio {
-    width: 90%;
-    margin-top: 20px;
-    display: none;
-  }
-  #sheikh-select {
-    margin-top: 20px;
-    padding: 10px;
-    font-size: 18px;
-    display: none;
-    border-radius: 8px;
-    border: none;
-    background: #222;
-    color: #fff;
-    cursor: pointer;
-  }
-  .footer-note {
-    margin-top: 20px;
-    background: linear-gradient(90deg, yellow, orange, yellow);
-    background-size: 200% auto;
-    animation: shine 2s linear infinite;
-    display: inline-block;
-    padding: 5px 15px;
-    border-radius: 5px;
-  }
-  .footer-note span {
-    color: white;
-    font-weight: bold;
-  }
-  @keyframes shine {
-    to { background-position: 200% center; }
-  }
-  footer {
-    margin-top: 40px;
-    font-size: 14px;
-    color: #ccc;
-  }
-  footer span {
-    display: block;
-    margin: 5px 0;
-  }
-  .moot-img {
-    max-width: 600px;
-    width: 100%;
-    height: auto;
-    margin: 20px auto;
-    display: block;
-  }
+  body { background: #000; color: #fff; font-family: "Tahoma", sans-serif; text-align: center; }
+  header { margin: 20px 0; }
+  header img { width: 300px; height: auto; }
+  .surah-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .surah-list button { flex: 0 0 45%; padding: 12px; background: #222; color: #fff; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: 0.3s; }
+  .surah-list button:hover { background: #444; }
+  #surah-content { margin-top: 20px; white-space: pre-line; line-height: 2; text-align: right; direction: rtl; }
+  #back-btn, #toggle-audio-btn { margin: 15px 5px; padding: 10px 20px; background: #444; color: #fff; border: none; border-radius: 8px; cursor: pointer; display: none; }
+  #back-btn:hover, #toggle-audio-btn:hover { background: #666; }
+  audio { width: 90%; margin-top: 20px; display: none; }
+  #sheikh-select { margin-top: 20px; padding: 10px; font-size: 18px; display: none; border-radius: 8px; border: none; background: #222; color: #fff; cursor: pointer; }
+  .footer-note { margin-top: 20px; background: linear-gradient(90deg, yellow, orange, yellow); background-size: 200% auto; animation: shine 2s linear infinite; display: inline-block; padding: 5px 15px; border-radius: 5px; }
+  .footer-note span { color: white; font-weight: bold; }
+  @keyframes shine { to { background-position: 200% center; } }
+  footer { margin-top: 40px; font-size: 14px; color: #ccc; }
+  footer span { display: block; margin: 5px 0; }
+  .moot-img { max-width: 600px; width: 100%; height: auto; margin: 20px auto; display: block; }
 </style>
 </head>
 <body>
@@ -114,9 +29,7 @@
 <header>
   <img src="moot.png" alt="صدقة جارية" class="moot-img">
   <h2>📅 تاريخ الوفاة: 2025/9/25 😢💔</h2>
-  <h3 style="color:#FFD700; text-shadow: 0 0 10px #FFD700;">
-    ✨ "صدقة جارية حرم رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي"
-  </h3>
+  <h3 style="color:#FFD700; text-shadow: 0 0 10px #FFD700;">✨ "صدقة جارية حرم رمضان عبدالهادي - محمد رمضان الصعيدي - وكل متوفي"</h3>
 </header>
 
 <main>
@@ -143,11 +56,13 @@ const backBtn = document.getElementById("back-btn");
 const sheikhSelect = document.getElementById("sheikh-select");
 const toggleAudioBtn = document.getElementById("toggle-audio-btn");
 
-// قائمة المشايخ وروابطهم
+// قائمة الشيوخ المتاحة على EveryAyah مع صيغة الروابط الصحيحة
 const sheikhs = {
   "العفاسي": "Alafasy",
   "مشاري راشد": "Mishary_Rashed_Alafasy",
-  "عبد الرحمن مسعد": "Abd_Elrahman_Mosad"
+  "عبد الرحمن مسعد": "Abd_Elrahman_Mosad",
+  "الشيخ سعود الشريم": "Saud_Shuraym",
+  "الشيخ ماهر المعيقلي": "Maher_AlMuaiqly"
 };
 
 // جلب قائمة السور
@@ -162,7 +77,6 @@ fetch("https://api.alquran.cloud/v1/surah")
     });
   });
 
-// تحميل السورة المختارة
 function loadSurah(num) {
   surahList.style.display = "none";
   backBtn.style.display = "inline-block";
@@ -170,7 +84,6 @@ function loadSurah(num) {
   audioPlayer.style.display = "none";
   toggleAudioBtn.style.display = "none";
 
-  // تحميل النص
   fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`)
     .then(res => res.json())
     .then(data => {
@@ -180,7 +93,6 @@ function loadSurah(num) {
       });
     });
 
-  // اظهار قائمة الشيخ
   sheikhSelect.style.display = "inline-block";
   sheikhSelect.innerHTML = `<option value="">اختر الشيخ</option>`;
   for (const key in sheikhs) {
@@ -190,7 +102,6 @@ function loadSurah(num) {
     sheikhSelect.appendChild(opt);
   }
 
-  // تشغيل الصوت عند اختيار الشيخ
   sheikhSelect.onchange = function() {
     if (!this.value) return;
     audioPlayer.src = `https://everyayah.com/data/${this.value}/${num}.mp3`;
@@ -201,7 +112,6 @@ function loadSurah(num) {
   };
 }
 
-// زر الرجوع
 function goBack() {
   surahList.style.display = "flex";
   backBtn.style.display = "none";
@@ -212,7 +122,6 @@ function goBack() {
   toggleAudioBtn.style.display = "none";
 }
 
-// زر تشغيل/إيقاف الصوت
 function toggleAudio() {
   if (audioPlayer.paused) {
     audioPlayer.play().catch(err => console.log("مشكلة في تشغيل الصوت:", err));
