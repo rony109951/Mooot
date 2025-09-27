@@ -64,6 +64,32 @@
     margin-top: 20px;
     display: none;
   }
+  #sheikh-select {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 18px;
+    display: none;
+    border-radius: 8px;
+    border: none;
+    background: #222;
+    color: #fff;
+    cursor: pointer;
+  }
+  .footer-note {
+    margin-top: 20px;
+    color: yellow;
+    font-size: 18px;
+    font-weight: bold;
+    background: linear-gradient(90deg, yellow, orange, yellow);
+    background-size: 200% auto;
+    animation: shine 2s linear infinite;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  @keyframes shine {
+    to { background-position: 200% center; }
+  }
   footer {
     margin-top: 40px;
     font-size: 14px;
@@ -95,8 +121,10 @@
 <main>
   <div class="surah-list" id="surah-list"></div>
   <button id="back-btn" onclick="goBack()">🔙 رجوع </button>
+  <select id="sheikh-select"></select>
   <audio id="audio" controls></audio>
   <div id="surah-content"></div>
+  <div class="footer-note"> مطوّر الموقع/محمد الصنقري</div>
 </main>
 
 <footer>
@@ -110,6 +138,14 @@ const surahList = document.getElementById("surah-list");
 const surahContent = document.getElementById("surah-content");
 const audioPlayer = document.getElementById("audio");
 const backBtn = document.getElementById("back-btn");
+const sheikhSelect = document.getElementById("sheikh-select");
+
+// قائمة المشايخ وروابطهم في everyayah.com أو مصادر آمنة
+const sheikhs = {
+  "العفاسي": "Alafasy",
+  "مشاري راشد": "Mishary_Rashed_Alafasy",
+  "عبد الرحمن مسعد": "Abd_Elrahman_Mosad" // مثال، يمكن تعديل الرابط
+};
 
 // جلب قائمة السور
 fetch("https://api.alquran.cloud/v1/surah")
@@ -125,10 +161,12 @@ fetch("https://api.alquran.cloud/v1/surah")
 
 // تحميل السورة المختارة
 function loadSurah(num) {
-  surahList.style.display = "none"; // اخفاء قائمة السور
-  backBtn.style.display = "inline-block"; // اظهار زر الرجوع
+  surahList.style.display = "none";
+  backBtn.style.display = "inline-block";
   surahContent.textContent = "جارٍ التحميل...";
+  audioPlayer.style.display = "none";
 
+  // تحميل النص
   fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`)
     .then(res => res.json())
     .then(data => {
@@ -136,16 +174,25 @@ function loadSurah(num) {
       data.data.ayahs.forEach(ayah => {
         surahContent.textContent += ayah.text + "\n";
       });
-
-      // تشغيل الصوت
-      audioPlayer.src = `https://everyayah.com/data/Alafasy/${num}.mp3`;
-      audioPlayer.style.display = "block";
-      audioPlayer.play().catch(err => console.log("مشكلة في تشغيل الصوت:", err));
-    })
-    .catch(err => {
-      surahContent.textContent = "❌ حدث خطأ في تحميل السورة";
-      console.error(err);
     });
+
+  // اظهار قائمة الشيخ
+  sheikhSelect.style.display = "inline-block";
+  sheikhSelect.innerHTML = `<option value="">اختر الشيخ</option>`;
+  for (const key in sheikhs) {
+    const opt = document.createElement("option");
+    opt.value = sheikhs[key];
+    opt.textContent = key;
+    sheikhSelect.appendChild(opt);
+  }
+
+  // تشغيل الصوت عند اختيار الشيخ
+  sheikhSelect.onchange = function() {
+    if (!this.value) return;
+    audioPlayer.src = `https://everyayah.com/data/${this.value}/${num}.mp3`;
+    audioPlayer.style.display = "block";
+    audioPlayer.play().catch(err => console.log("مشكلة في تشغيل الصوت:", err));
+  };
 }
 
 // زر الرجوع
@@ -155,9 +202,9 @@ function goBack() {
   surahContent.textContent = "";
   audioPlayer.pause();
   audioPlayer.style.display = "none";
+  sheikhSelect.style.display = "none";
 }
 </script>
 
 </body>
-  </html>
-    
+</html>
